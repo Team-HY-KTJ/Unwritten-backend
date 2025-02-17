@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS user_quest (
     user_id VARCHAR(50) NOT NULL,
     quest_id VARCHAR(255) NOT NULL,
     progress FLOAT NOT NULL, -- 진척도
-    UNIQUE(user_id, quest_id)
+    UNIQUE(user_id, quest_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS user_achievement (
@@ -23,7 +24,8 @@ CREATE TABLE IF NOT EXISTS user_achievement (
     complete_time TIMESTAMP NOT NULL,
     progress FLOAT NOT NULL,
     ranking BIGINT, -- 달성 등수
-    UNIQUE(user_id, challenge_name)
+    UNIQUE(user_id, challenge_name),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS user_inventory (
@@ -31,14 +33,16 @@ CREATE TABLE IF NOT EXISTS user_inventory (
     item_name VARCHAR(255) NOT NULL,
     count BIGINT NOT NULL, -- 만약 가질 수 있는 아이템 개수에 제한을 줄 경우 TINYINT (0 ~ 255) 도 고려해볼만할 듯
     is_clear TINYINT(1) NOT NULL, -- 1 : 달성, 0 : 미달성, 실제로 bool로 저장하더라도 이렇게 생성된다고 함
-    UNIQUE(user_id, item_name)
+    UNIQUE(user_id, item_name),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS item_instance (
     item_id VARCHAR(50) NOT NULL PRIMARY KEY, -- 아이템 고유 아이디(직접 설정해줄 예정? 랜덤으로 생성 예정? 고민해봐야될 듯듯)
     item_name VARCHAR(255) NOT NULL,
     user_id VARCHAR(50) NOT NULL,
-    current_state TINYINT(1) NOT NULL -- 1 : 활성화, 0 : 비활성화
+    current_state TINYINT(1) NOT NULL, -- 1 : 활성화, 0 : 비활성화
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS achievement (
@@ -70,3 +74,5 @@ INSERT INTO item_instance  (item_id, item_name, user_id, current_state) VALUES (
 INSERT INTO achievement (challenge_name, grade, condition_information, content, clear_count) VALUES ('도전과제 A', 'NORMAL', 'test', 'test', 10);
 INSERT INTO item (item_name, grade, effect, condition_information, content) VALUES ('아티팩트 I', 'test', 'test', 'test', 'test');
 INSERT INTO quest_combination (combination) VALUES ('1,2,3');
+
+INSERT INTO user_quest (user_id, quest_id, progress) VALUES ('00000001', '1', 0.5); -- 참조 무결성으로 인해 해당 column은 insert 되지 않음음
