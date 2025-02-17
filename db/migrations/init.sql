@@ -8,8 +8,6 @@ CREATE TABLE IF NOT EXISTS users (
     nickname VARCHAR(255) NOT NULL
 );
 
-INSERT INTO users (user_id, nickname) VALUES ('00000000', 'steve');
-
 CREATE TABLE IF NOT EXISTS user_quest (
     user_id VARCHAR(50) NOT NULL,
     quest_id VARCHAR(255) NOT NULL,
@@ -66,11 +64,3 @@ CREATE TABLE IF NOT EXISTS quest_combination (
     quest_combination_id INT AUTO_INCREMENT PRIMARY KEY,
     combination VARCHAR(50) NOT NULL
 );
-
-INSERT INTO user_quest (user_id, quest_id, progress) VALUES ('00000000', '1', 0.5);
-INSERT INTO user_achievement (user_id, challenge_name, complete_time, progress, ranking) VALUES ('00000000', '도전과제 A', NOW(), 1, 3);
-INSERT INTO user_inventory (user_id, item_name, count, is_clear) VALUES ('00000000', '아티팩트 I', 0, 1);
-INSERT INTO item_instance  (item_id, item_name, user_id, current_state) VALUES ('12345678', '아티팩트 III', '00000000', 1);
-INSERT INTO achievement (challenge_name, grade, condition_information, content, clear_count) VALUES ('도전과제 A', 'NORMAL', 'test', 'test', 10);
-INSERT INTO item (item_name, grade, effect, condition_information, content) VALUES ('아티팩트 I', 'test', 'test', 'test', 'test');
-INSERT INTO quest_combination (combination) VALUES ('1,2,3');

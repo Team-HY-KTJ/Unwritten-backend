@@ -9,7 +9,7 @@ router.post('', (req, res) => {
     const {userId, nickname } = req.query;
     const response = { userId : userId, nickname : nickname };
 
-    db.query('INSERT INTO users (user_id, nickname) VALUES (?, ?)', [userId, nickname], (err) => {
+    db.query('INSERT IGNORE INTO users (user_id, nickname) VALUES (?, ?)', [userId, nickname], (err) => {
         if (err) {
             console.error('데이터 삽입 오류:', err);
             return res.status(500).send('서버 오류');
