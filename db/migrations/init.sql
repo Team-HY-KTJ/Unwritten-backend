@@ -74,5 +74,3 @@ INSERT INTO item_instance  (item_id, item_name, user_id, current_state) VALUES (
 INSERT INTO achievement (challenge_name, grade, condition_information, content, clear_count) VALUES ('도전과제 A', 'NORMAL', 'test', 'test', 10);
 INSERT INTO item (item_name, grade, effect, condition_information, content) VALUES ('아티팩트 I', 'test', 'test', 'test', 'test');
 INSERT INTO quest_combination (combination) VALUES ('1,2,3');
-
-INSERT INTO user_quest (user_id, quest_id, progress) VALUES ('00000001', '1', 0.5); -- 참조 무결성으로 인해 해당 column은 insert 되지 않음음
