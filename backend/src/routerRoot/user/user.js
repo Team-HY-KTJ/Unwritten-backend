@@ -15,22 +15,23 @@ const { DB_TABLENAME } = process.env;
 
     반환 쿼리 = {
         userId : "00000000",
-        nickname : "별명"
+        isSuccess : true
     }
 */
 router.post('', (req, res) => {
     const { userId, nickname } = req.query;
-    const response = { userId : userId, nickname : nickname };
+    const response = { userId : userId, isSuccess : false };
 
     db.query('INSERT IGNORE INTO users (user_id, nickname) VALUES (?, ?)', [userId, nickname], (err) => {
         if (err) {
             console.error('데이터 삽입 오류:', err);
-            return res.status(500).send('서버 오류');
+            res.json(response);
         }
-        response.userId = userId;
-        response.nickname = nickname;
-        console.log(response);
-        res.json(response);
+        else {
+            response.isSuccess = true;
+            console.log(response);
+            res.json(response);
+        }
     });
 });
 
@@ -43,31 +44,36 @@ router.post('', (req, res) => {
 
     반환 쿼리 = {
         userId : "00000000",
-        exists : true
+        exists : true,
+        accessLevel : 3
     }
 */
 router.get('', async (req, res) => {
     const { userId } = req.query;
-    const response = { exists : null };
-    const count = await new Promise((resolve, reject) => {
+    const response = { userId : userId, exists : null, accessLevel : null };
+    const [count] = await new Promise((resolve, reject) => {
         db.query('SELECT COUNT(*) AS count FROM users WHERE user_id = ?', [userId], (err, results) => {
             if(err) reject(err);
             resolve(results);
         });
     });
 
-    console.log(count[0].count);
+    const [accessLevel] = db.query('SELECT access_level FROM users WHERE user_id = ?', [userId], (err, results) => {
+        if(err) reject(err);
+        resolve(results);
+    });
 
-    if(count[0].count === 0){
-        response.userId = userId;
+    response.accessLevel = accessLevel.accessLevel;
+
+    if(count.count === 0){
         response.exists = false;
     }
     else {
-        response.userId = userId;
         response.exists = true;
     }
+    
     console.log(response);
     res.json(response);
-})
+});
 
 export { route, router };
