@@ -51,21 +51,15 @@ router.post('', (req, res) => {
 router.get('', async (req, res) => {
     const { userId } = req.query;
     const response = { userId : userId, exists : null, accessLevel : null };
-    const [count] = await new Promise((resolve, reject) => {
-        db.query('SELECT COUNT(*) AS count FROM users WHERE user_id = ?', [userId], (err, results) => {
+    const [result] = await new Promise((resolve, reject) => {
+        db.query('SELECT COUNT(*) AS count, access_level FROM users WHERE user_id = ?', [userId], (err, results) => {
             if(err) reject(err);
             resolve(results);
         });
     });
+    response.accessLevel = result.access_level;
 
-    const [accessLevel] = db.query('SELECT access_level FROM users WHERE user_id = ?', [userId], (err, results) => {
-        if(err) reject(err);
-        resolve(results);
-    });
-
-    response.accessLevel = accessLevel.accessLevel;
-
-    if(count.count === 0){
+    if(result.count === 0){
         response.exists = false;
     }
     else {
