@@ -5,8 +5,21 @@ const route = '/user';
 const router = express.Router();
 const { DB_TABLENAME } = process.env;
 
+/*
+    /user (post) : 신규 유저 등록
+
+    입력 쿼리 = {
+        userId : "00000000",
+        nickname : "별명"
+    }
+
+    반환 쿼리 = {
+        userId : "00000000",
+        nickname : "별명"
+    }
+*/
 router.post('', (req, res) => {
-    const {userId, nickname } = req.query;
+    const { userId, nickname } = req.query;
     const response = { userId : userId, nickname : nickname };
 
     db.query('INSERT IGNORE INTO users (user_id, nickname) VALUES (?, ?)', [userId, nickname], (err) => {
@@ -16,10 +29,23 @@ router.post('', (req, res) => {
         }
         response.userId = userId;
         response.nickname = nickname;
+        console.log(response);
         res.json(response);
     });
 });
 
+/*
+    /user (get) : 유저 등록 여부 확인
+
+    입력 쿼리 = {
+        userId : "00000000"
+    }
+
+    반환 쿼리 = {
+        userId : "00000000",
+        exists : true
+    }
+*/
 router.get('', async (req, res) => {
     const { userId } = req.query;
     const response = { exists : null };
@@ -33,13 +59,14 @@ router.get('', async (req, res) => {
     console.log(count[0].count);
 
     if(count[0].count === 0){
+        response.userId = userId;
         response.exists = false;
-        console.log("not exist");
     }
     else {
+        response.userId = userId;
         response.exists = true;
-        console.log("exist");
     }
+    console.log(response);
     res.json(response);
 })
 
