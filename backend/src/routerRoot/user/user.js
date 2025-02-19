@@ -1,8 +1,5 @@
 import express from 'express';
 import db from '../../db.js';
-import { rejects } from 'assert';
-import { resolve } from 'path';
-import { userInfo } from 'os';
 
 const route = '/user';
 const router = express.Router();
