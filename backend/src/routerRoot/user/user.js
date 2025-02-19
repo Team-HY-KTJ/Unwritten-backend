@@ -25,9 +25,12 @@ router.post('', (req, res) => {
     const { userId, nickname } = req.query;
     const response = { userId : userId, isSuccess : false };
     
-    // 닉네임을 따로 설정하지 않은 상태로 쿼리를 보내도 정상작동이 되고 있는 상태 (유저 초기 등록 시 닉네임 기입을 바로 한다면 입력조건 부여 필요)
-    
-    db.query('INSERT IGNORE INTO users (user_id, nickname) VALUES (?, ?)', [userId, nickname], (err) => {
+    if(!nickname){
+        console.log(nickname, "은 올바르지 않은 형식입니다.");
+        return res.json("올바르지 않은 닉네임 접근");
+    }
+
+    db.query('INSERT INTO users (user_id, nickname, access_level) VALUES (?, ?, 1)', [userId, nickname], (err) => {
         if (err) {
             console.error('데이터 삽입 오류:', err);
             res.json(response);
