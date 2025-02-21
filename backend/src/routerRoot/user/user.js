@@ -99,7 +99,7 @@ router.get('', async (req, res) => {
 */
 router.patch('', async (req,res) => {
     const { userId, accessLevel } = req.query;
-    const response = { userId : userId, accessLevel : null, isSuccess : false };
+    const response = { userId : userId, accessLevel : accessLevel, isSuccess : false };
     
     try {
         await new Promise((resolve, reject) => {
@@ -108,19 +108,6 @@ router.patch('', async (req,res) => {
                 resolve(results);
             });
         });
-        const [result] = await new Promise((resolve, reject) => {
-            db.query('SELECT access_level FROM users WHERE user_id = ?', [userId], (err, results) => {
-                if(err) reject(err);
-                resolve(results);
-            });
-        });
-        
-        if(accessLevel != result.access_level){
-            console.log(accessLevel, "!==", result.access_level);
-            throw new Error('sql UPDATE ERROR');
-        }
-
-        response.accessLevel = result.access_level;
         response.isSuccess = true;
     }
     catch(e){
@@ -154,13 +141,7 @@ router.delete('', async (req, res) => {
                 resolve(results);
             });
         });
-        const [result] = await new Promise((resolve, reject) => {
-            db.query('SELECT COUNT(*) AS count FROM users WHERE user_id = ?', [userId], (err, results) => {
-                if(err) reject(err);
-                resolve(results);
-            });
-        });
-        if(result.count === 0) response.isSuccess = true;
+        response.isSuccess = true;
     }
     catch(e){
         console.log(e);
