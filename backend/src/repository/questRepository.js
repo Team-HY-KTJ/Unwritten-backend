@@ -1,4 +1,4 @@
-import db from "../db";
+import db from "../db.js";
 
 async function createUserQuest( userId, questId )
 {
@@ -47,7 +47,7 @@ async function readUserQuest( userId, questId )
         SELECT *
         FROM user_quest
         LEFT JOIN quest ON user_quest.quest_id = quest.quest_id
-        WHERE user_id = ? AND quest_id = ?
+        WHERE user_quest.user_id = ? AND user_quest.quest_id = ?
     `;
     const data = [ userId, questId ];
 
